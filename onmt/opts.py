@@ -562,7 +562,7 @@ def train_opts(parser):
                    "model faster and smaller")
 
     # Options for co-training word embeddings
-    group.add('--cbow', action='store_true',
+    group.add('--use_cbow', action='store_true',
               help='Will also train word embeddings from char embeddings '
                    'using continous bag of words')
 
