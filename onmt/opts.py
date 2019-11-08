@@ -561,7 +561,12 @@ def train_opts(parser):
               help="Using grayscale image can training "
                    "model faster and smaller")
 
+    # Options for co-training word embeddings
+    group.add('--cbow', action='store_true',
+              help='Will also train word embeddings from char embeddings '
+                   'using continous bag of words')
 
+    
 def translate_opts(parser):
     """ Translation / inference options """
     group = parser.add_argument_group('Model')
