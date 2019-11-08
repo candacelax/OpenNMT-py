@@ -565,6 +565,8 @@ def train_opts(parser):
     group.add('--use_cbow', action='store_true',
               help='Will also train word embeddings from char embeddings '
                    'using continous bag of words')
+    group.add('--metadata', default=None,
+              help='Path to prefix .CSV for metadata')
 
     
 def translate_opts(parser):
