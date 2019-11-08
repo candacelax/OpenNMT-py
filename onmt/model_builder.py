@@ -10,8 +10,8 @@ from torch.nn.init import xavier_uniform_
 import onmt.inputters as inputters
 import onmt.modules
 from onmt.encoders import str2enc
-
 from onmt.decoders import str2dec
+from onmt.models.cbow import CBOW
 
 from onmt.modules import Embeddings, VecEmbedding, CopyGenerator
 from onmt.modules.util_class import Cast
@@ -87,6 +87,8 @@ def build_decoder(opt, embeddings):
                else opt.decoder_type
     return str2dec[dec_type].from_opt(opt, embeddings)
 
+def build_CBOW(opt):
+    return CBOW.from_opt(opt)
 
 def load_test_model(opt, model_path=None):
     if model_path is None:
@@ -162,6 +164,11 @@ def build_base_model(model_opt, fields, gpu, checkpoint=None, gpu_id=None):
 
     decoder = build_decoder(model_opt, tgt_emb)
 
+    # Build semantic model
+    if model_opt.use_cbow:
+        cbow = build_CBOW(model_opt)
+        setattr(model_opt, 'cbow', cbow)
+
     # Build NMTModel(= encoder + decoder).
     if gpu and gpu_id is not None:
         device = torch.device("cuda", gpu_id)
@@ -169,7 +176,7 @@ def build_base_model(model_opt, fields, gpu, checkpoint=None, gpu_id=None):
         device = torch.device("cuda")
     elif not gpu:
         device = torch.device("cpu")
-    model = onmt.models.NMTModel(encoder, decoder)
+    model = onmt.models.NMTModel(encoder, decoder, model_opt)
 
     # Build Generator.
     if not model_opt.copy_attn:
