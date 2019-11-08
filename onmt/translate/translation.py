@@ -154,9 +154,11 @@ class Translation(object):
             tgt_sent = ' '.join(self.gold_sent)
             msg.append('GOLD {}: {}\n'.format(sent_number, tgt_sent))
             msg.append(("GOLD SCORE: {:.4f}\n".format(self.gold_score)))
+            is_correct = tgt_sent == pred_sent
+            msg.append('{}\n'.format('Correct' if is_correct else 'Incorrect'))
         if len(self.pred_sents) > 1:
             msg.append('\nBEST HYP:\n')
             for score, sent in zip(self.pred_scores, self.pred_sents):
                 msg.append("[{:.4f}] {}\n".format(score, sent))
-
+            
         return "".join(msg)
